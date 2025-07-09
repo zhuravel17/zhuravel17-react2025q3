@@ -1,48 +1,38 @@
-// eslint.config.js
-import react from 'eslint-plugin-react';
+import js from '@eslint/js';
 import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import reactCompiler from 'eslint-plugin-react-compiler';
 
-export default [
-  ...tseslint.configs.recommended,
+export default tseslint.config(
+  { ignores: ['dist'] },
   {
-    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    extends: [js.configs.recommended, ...tseslint.configs.strict, eslintPluginPrettier],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      globals: {
-        ...globals.browser,
-      },
+      ecmaVersion: 2020,
+      globals: globals.browser,
     },
     plugins: {
       react,
-      '@typescript-eslint': tseslint.plugin,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+      'react-compiler': reactCompiler,
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/ban-ts-comment': [
-        'error',
-        {
-          'ts-ignore': true,
-        },
-      ],
-      'no-warning-comments': [
-        'warn',
-        {
-          terms: ['todo', 'fixme', 'commented'],
-          location: 'anywhere',
-        },
-      ],
-      'no-fallthrough': 'warn',
-      'no-redeclare': 'error',
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-compiler/react-compiler': 'error',
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
   },
-];
+);
