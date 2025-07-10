@@ -1,0 +1,23 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 20px;
+  background-color: #e8dfea;
+  color: white;
+  text-align: center;
+  width: 100vw;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header div {
+  margin-top: 8px;
+  font-size: 1.5rem;
+  color: #222426;
+}
