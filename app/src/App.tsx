@@ -2,9 +2,11 @@ import { Component, ReactNode } from 'react';
 import { Search } from './components/Search/Search';
 import { fetchCharacters } from './utils/fetchResults';
 import { Header } from './components/Header/Header';
+import { CardList } from './components/CardList/CardList';
+import { Character } from './types/character';
 
 interface AppState {
-  results: boolean[];
+  results: Character[];
   loading: boolean;
   error: string | null;
 }
@@ -36,7 +38,7 @@ export class App extends Component<object, AppState> {
   };
 
   render(): ReactNode {
-    const { loading, error } = this.state;
+    const { loading, error, results } = this.state;
 
     return (
       <div>
@@ -47,6 +49,7 @@ export class App extends Component<object, AppState> {
             <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>
           )}
           {loading && <p>Loading...</p>}
+          {!loading && !error && <CardList items={results} />}
         </div>
       </div>
     );
