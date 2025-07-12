@@ -12,7 +12,7 @@ export class CardList extends Component<CardListProps> {
     const { items } = this.props;
     if (items.length === 0) return <p>No results</p>;
     return (
-      <div className="cardList">
+      <div className="card-list">
         {items.map((item) => (
           <Card key={item.id} item={item} />
         ))}

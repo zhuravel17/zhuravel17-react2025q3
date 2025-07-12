@@ -5,7 +5,6 @@ export class Header extends Component {
     return (
       <header className="header">
         <h1>Rick and Morty</h1>
-        <div>You can serch</div>
       </header>
     );
   }

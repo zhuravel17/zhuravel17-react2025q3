@@ -1,14 +1,10 @@
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
   padding: 20px;
-  background-color: #e8dfea;
-  color: white;
+  background-color: #fafafa;
+  color: black;
   text-align: center;
   width: 100vw;
+  border-bottom: 1px solid #7c7d7d;
 }
 
 .header h1 {

@@ -4,6 +4,9 @@ import { fetchCharacters } from './utils/fetchResults';
 import { Header } from './components/Header/Header';
 import { CardList } from './components/CardList/CardList';
 import { Character } from './types/character';
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import { ErrorButton } from './components/ErrorButton/ErrorButton';
+import { Loading } from './components/Loading/Loading';
 
 interface AppState {
   results: Character[];
@@ -43,14 +46,19 @@ export class App extends Component<object, AppState> {
     return (
       <div>
         <Header />
-        <Search onSearch={this.fetchResults} isLoading={loading} />
-        <div style={{ padding: '16px' }}>
-          {error && (
-            <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>
-          )}
-          {loading && <p>Loading...</p>}
-          {!loading && !error && <CardList items={results} />}
-        </div>
+        <ErrorBoundary
+          search={<Search onSearch={this.fetchResults} isLoading={loading} />}
+        >
+          <Search onSearch={this.fetchResults} isLoading={loading} />
+          <div style={{ padding: '16px' }}>
+            {error && (
+              <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>
+            )}
+            {loading && <Loading />}
+            {!loading && !error && <CardList items={results} />}
+          </div>
+          <ErrorButton />
+        </ErrorBoundary>
       </div>
     );
   }
