@@ -1,0 +1,19 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.error-boundary h1 {
+  color: #ff4d4f;
+}
+
+.error-boundary button {
+  background-color: #ff4d4f;
+  color: white;
+}
+
+.error-boundary button:hover {
+  background-color: #d9363e;
+}
