@@ -1,0 +1,14 @@
+.error-button {
+  background-color: #ff4d4f;
+  color: white;
+  margin-right: 20vw;
+}
+
+.error-button:hover {
+  background-color: #d9363e;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+}
