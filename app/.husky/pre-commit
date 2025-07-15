@@ -1,2 +1,2 @@
-cd app
-npx lint-staged
+echo "✅ Husky pre-commit hook is working!"
+exit 1
