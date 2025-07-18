@@ -1,6 +1,6 @@
 import { Character } from '../types/character';
 
-export function fetchCharacters(term: string): Promise<Character[]> {
+export default function fetchCharacters(term: string): Promise<Character[]> {
   const query = term ? `?name=${term}` : '';
   const url = `https://rickandmortyapi.com/api/character${query}`;
 
