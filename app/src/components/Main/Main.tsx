@@ -1,6 +1,6 @@
 import { Component, ReactNode } from 'react';
 import { Search } from '../Search/Search';
-import { fetchCharacters } from '../../utils/fetchResults';
+import fetchCharacters from '../../utils/fetchResults';
 import { Header } from '../Header/Header';
 import { CardList } from '../CardList/CardList';
 import { Character } from '../../types/character';

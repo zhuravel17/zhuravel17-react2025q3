@@ -14,12 +14,8 @@ export class Card extends Component<Props> {
         <img src={item.image} alt={item.name} className="card__img" />
         <div className="card__info">
           <h3 className="card__name">{item.name}</h3>
-          <p className="card__status">
-            <strong>Status:</strong> {item.status}
-          </p>
-          <p className="card__location">
-            <strong>Location:</strong> {item.location.name}
-          </p>
+          <p className="card__status">Status: {item.status}</p>
+          <p className="card__location">Location: {item.location.name}</p>
         </div>
       </div>
     );
