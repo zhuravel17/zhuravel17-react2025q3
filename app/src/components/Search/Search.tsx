@@ -1,54 +1,41 @@
-import { Component, ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, ReactElement } from 'react';
 import './Search.styles.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 interface SearchProps {
   onSearch: (term: string) => void;
   isLoading: boolean;
 }
 
-interface SearchState {
-  searchItem: string;
-}
+export function Search({ onSearch, isLoading }: SearchProps): ReactElement {
+  const [searchItem, setSearchItem] = useLocalStorage('search', '');
 
-export class Search extends Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    const saved = localStorage.getItem('search') || '';
-    this.state = {
-      searchItem: saved,
-    };
-  }
-
-  handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ searchItem: e.target.value });
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSearchItem(e.target.value);
   };
 
-  handleSearch = (): void => {
-    const trimmed = this.state.searchItem.trim();
+  const handleSearch = (): void => {
+    const trimmed = searchItem.trim();
     localStorage.setItem('search', trimmed);
-    this.props.onSearch(trimmed);
+    onSearch(trimmed);
   };
 
-  render(): ReactNode {
-    const { isLoading } = this.props;
-
-    return (
-      <div className="search-container">
-        <input
-          type="text"
-          value={this.state.searchItem}
-          onChange={this.handleInputChange}
-          className="search-input"
-          placeholder="Search..."
-        />
-        <button
-          onClick={this.handleSearch}
-          disabled={isLoading}
-          className="search-button"
-        >
-          {isLoading ? 'Searching...' : 'Search'}
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        value={searchItem}
+        onChange={handleInputChange}
+        className="search-input"
+        placeholder="Search..."
+      />
+      <button
+        onClick={handleSearch}
+        disabled={isLoading}
+        className="search-button"
+      >
+        {isLoading ? 'Searching...' : 'Search'}
+      </button>
+    </div>
+  );
 }
