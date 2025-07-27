@@ -1,0 +1,20 @@
+.character-container {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.left-panel {
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+.with-details .left-panel {
+  width: 60%;
+}
+
+.right-panel {
+  width: 40%;
+  border-left: 1px solid #ccc;
+  padding-left: 16px;
+}

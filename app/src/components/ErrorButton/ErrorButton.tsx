@@ -1,32 +1,21 @@
-import { Component, ReactNode } from 'react';
+import { ReactElement, useState } from 'react';
 import './ErrorButton.styles.css';
 
-interface ErrorButtonState {
-  shouldThrow: boolean;
-}
+export function ErrorButton(): ReactElement {
+  const [shouldThrow, setShouldThrow] = useState<boolean>(false);
 
-export class ErrorButton extends Component<object, ErrorButtonState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      shouldThrow: false,
-    };
+  if (shouldThrow) {
+    throw new Error('Test error from ErrorButton');
   }
-
-  handleClick = (): void => {
-    this.setState({ shouldThrow: true });
+  const handleClick = (): void => {
+    setShouldThrow(true);
   };
 
-  render(): ReactNode {
-    if (this.state.shouldThrow) {
-      throw new Error('Test error from ErrorButton');
-    }
-    return (
-      <div className="button-container">
-        <button className="error-button" onClick={this.handleClick}>
-          Throw Error
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div className="button-container">
+      <button className="error-button" onClick={handleClick}>
+        Throw Error
+      </button>
+    </div>
+  );
 }

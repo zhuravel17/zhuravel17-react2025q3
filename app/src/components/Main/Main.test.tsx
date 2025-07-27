@@ -1,9 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MainPage } from './Main';
-import fetchCharacters from '../../utils/fetchResults';
+import fetchCharacters from '../../utils/fetchCharacters';
 import { baseCharacter } from '../../__tests__/mockData';
+import { MemoryRouter } from 'react-router-dom';
 
-jest.mock('../../utils/fetchResults');
+jest.mock('../../utils/fetchCharacters');
 
 describe('MainPage Integration Tests', () => {
   beforeEach(() => {
@@ -13,13 +14,20 @@ describe('MainPage Integration Tests', () => {
 
   it('calls fetchCharacters on mount with saved search term from localStorage', async () => {
     localStorage.setItem('search', 'rick');
-    (fetchCharacters as jest.Mock).mockResolvedValueOnce([baseCharacter]);
+    (fetchCharacters as jest.Mock).mockResolvedValueOnce({
+      results: [baseCharacter],
+      pages: 1,
+    });
 
-    render(<MainPage />);
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <MainPage />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
-      expect(fetchCharacters).toHaveBeenCalledWith('rick');
-      expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+      expect(fetchCharacters).toHaveBeenCalledWith('rick', 1);
+      expect(screen.getByText(/rick sanchez/i)).toBeInTheDocument();
     });
   });
 
@@ -28,15 +36,26 @@ describe('MainPage Integration Tests', () => {
       () => new Promise(() => {})
     );
 
-    render(<MainPage />);
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <MainPage />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
   it('handles API success response', async () => {
-    (fetchCharacters as jest.Mock).mockResolvedValueOnce([baseCharacter]);
+    (fetchCharacters as jest.Mock).mockResolvedValueOnce({
+      results: [baseCharacter],
+      pages: 1,
+    });
 
-    render(<MainPage />);
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <MainPage />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
@@ -48,7 +67,11 @@ describe('MainPage Integration Tests', () => {
       new Error('API Error')
     );
 
-    render(<MainPage />);
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <MainPage />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();

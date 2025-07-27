@@ -1,11 +1,14 @@
-import { Component, ReactNode } from 'react';
+import { ReactElement } from 'react';
 import './Header.styles.css';
-export class Header extends Component {
-  render(): ReactNode {
-    return (
-      <header className="header">
-        <h1>Rick and Morty</h1>
-      </header>
-    );
-  }
+import { Link } from 'react-router-dom';
+
+export function Header(): ReactElement {
+  return (
+    <header className="header">
+      <h1>Rick and Morty</h1>
+      <nav>
+        <Link to="/about">About</Link>
+      </nav>
+    </header>
+  );
 }
