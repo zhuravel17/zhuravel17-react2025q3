@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { Card } from './Card';
 import { baseCharacter } from '../../__tests__/mockData';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Card component', () => {
   it('displays character name, status and location correctly', () => {
-    render(<Card item={baseCharacter} />);
+    render(
+      <MemoryRouter>
+        <Card item={baseCharacter} />
+      </MemoryRouter>
+    );
 
     expect(screen.getByRole('img')).toHaveAttribute('src', baseCharacter.image);
     expect(screen.getByRole('img')).toHaveAttribute('alt', baseCharacter.name);
