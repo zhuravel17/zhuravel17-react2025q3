@@ -12,11 +12,7 @@ export function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps): ReactElement {
-  const pages: number[] = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pages.push(i);
-  }
-
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   return (
     <div className="pagination-container">
       {pages.map((page) => (

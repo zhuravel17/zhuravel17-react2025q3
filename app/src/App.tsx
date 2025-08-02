@@ -4,16 +4,17 @@ import { CharacterDetails } from './components/CharacterDetails/CharacterDetails
 import { NotFound } from './components/NotFound/NotFound';
 import { About } from './components/About/About';
 import { ReactElement } from 'react';
+import { AppRoutes } from './enums/routes.enum';
 
 export function App(): ReactElement {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/1" replace />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/:page" element={<MainPage />}>
-        <Route path=":detailsId" element={<CharacterDetails />} />
+      <Route path={AppRoutes.Root} element={<Navigate to="/1" replace />} />
+      <Route path={AppRoutes.About} element={<About />} />
+      <Route path={AppRoutes.Page} element={<MainPage />}>
+        <Route path={AppRoutes.Details} element={<CharacterDetails />} />
       </Route>
-      <Route path="*" element={<NotFound />} />
+      <Route path={AppRoutes.NotFound} element={<NotFound />} />
     </Routes>
   );
 }

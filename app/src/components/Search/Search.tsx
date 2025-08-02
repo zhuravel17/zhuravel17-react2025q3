@@ -16,7 +16,7 @@ export function Search({ onSearch, isLoading }: SearchProps): ReactElement {
 
   const handleSearch = (): void => {
     const trimmed = searchItem.trim();
-    localStorage.setItem('search', trimmed);
+    setSearchItem(trimmed);
     onSearch(trimmed);
   };
 
