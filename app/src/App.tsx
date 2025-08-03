@@ -3,21 +3,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { CharacterDetails } from './components/CharacterDetails/CharacterDetails';
 import { NotFound } from './components/NotFound/NotFound';
 import { About } from './components/About/About';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement } from 'react';
 import { AppRoutes } from './enums/routes.enum';
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
 import { Header } from './components/Header/Header';
+import { ThemeProvider } from './context/ThemeContext';
 
 export function App(): ReactElement {
-  const theme = useSelector((state: RootState) => state.theme.theme);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
   return (
-    <>
+    <ThemeProvider>
       <Header />
       <Routes>
         <Route path={AppRoutes.Root} element={<Navigate to="/1" replace />} />
@@ -27,6 +20,6 @@ export function App(): ReactElement {
         </Route>
         <Route path={AppRoutes.NotFound} element={<NotFound />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }

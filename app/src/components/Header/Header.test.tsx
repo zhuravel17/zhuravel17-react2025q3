@@ -3,15 +3,18 @@ import { MemoryRouter } from 'react-router-dom';
 import { Header } from './Header';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
+import { ThemeProvider } from '../../context/ThemeContext';
 
 describe('Header', () => {
   it('renders the header with title, about link and theme button', () => {
     render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <Header />
-        </MemoryRouter>
-      </Provider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <MemoryRouter>
+            <Header />
+          </MemoryRouter>
+        </Provider>
+      </ThemeProvider>
     );
 
     expect(screen.getByText(/Rick and Morty/i)).toBeInTheDocument();

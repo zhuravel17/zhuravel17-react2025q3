@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import selectedReducer, { toggleItem } from '../../store/selectedSlice';
-import themeReducer from '../../store/themeSlice';
 import { SelectedFlyout } from './SelectedFlyout';
 import { baseCharacter } from '../../__tests__/mockData';
 import type { Store } from '@reduxjs/toolkit';
@@ -11,7 +10,6 @@ function setupStore(): Store {
   return configureStore({
     reducer: {
       selected: selectedReducer,
-      theme: themeReducer,
     },
   });
 }
