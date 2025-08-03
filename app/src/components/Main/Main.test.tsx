@@ -3,6 +3,8 @@ import { MainPage } from './Main';
 import fetchCharacters from '../../utils/fetchCharacters';
 import { baseCharacter } from '../../__tests__/mockData';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 jest.mock('../../utils/fetchCharacters');
 
@@ -20,9 +22,11 @@ describe('MainPage Integration Tests', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/1']}>
-        <MainPage />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/1']}>
+          <MainPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -37,9 +41,11 @@ describe('MainPage Integration Tests', () => {
     );
 
     render(
-      <MemoryRouter initialEntries={['/1']}>
-        <MainPage />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/1']}>
+          <MainPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
@@ -52,9 +58,11 @@ describe('MainPage Integration Tests', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/1']}>
-        <MainPage />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/1']}>
+          <MainPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -68,9 +76,11 @@ describe('MainPage Integration Tests', () => {
     );
 
     render(
-      <MemoryRouter initialEntries={['/1']}>
-        <MainPage />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/1']}>
+          <MainPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {

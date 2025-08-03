@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 import './ErrorBoundary.styles.css';
 
 interface ErrorBoundaryProps {
@@ -21,10 +21,6 @@ export class ErrorBoundary extends Component<
 
   static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error('Caught by ErrorBoundary:', error, info);
   }
 
   handleReset = (): void => {

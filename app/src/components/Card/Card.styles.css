@@ -5,7 +5,8 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--card-bg);
+  color: var(--text-color);
   width: 80%;
 }
 
@@ -29,13 +30,14 @@
 .card__name {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-color);
   margin: 0;
 }
 
 .card__status,
 .card__location {
   font-size: 0.95rem;
-  color: #374151;
+  color: var(--text-color);
+
   margin: 0;
 }

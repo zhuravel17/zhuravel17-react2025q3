@@ -2,7 +2,9 @@ import { ReactElement } from 'react';
 import { Character } from '../../types/character';
 import './Card.styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { toggleItem } from '../../store/selectedSlice';
 interface Props {
   item: Character;
 }
@@ -10,12 +12,27 @@ interface Props {
 export function Card({ item }: Props): ReactElement {
   const navigate = useNavigate();
   const { page } = useParams();
-
+  const dispatch = useDispatch();
+  const selectedItems = useSelector(
+    (state: RootState) => state.selected.selected
+  );
+  const isSelected = Boolean(
+    selectedItems.find((selected) => selected.id === item.id)
+  );
+  const handleCheckboxClick = (): void => {
+    dispatch(toggleItem(item));
+  };
   const handleClick = (): void => {
     navigate(`/${page}/${item.id}`);
   };
   return (
     <div className="card" onClick={handleClick}>
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={handleCheckboxClick}
+        onClick={(e) => e.stopPropagation()}
+      />
       <img src={item.image} alt={item.name} className="card__img" />
       <div className="card__info">
         <h3 className="card__name">{item.name}</h3>

@@ -1,14 +1,19 @@
+import { HttpStatus } from '../enums/httpStatus.enum';
 import { Character } from '../types/character';
+import { API_URL } from '../consts/urlConst';
 
 export default function fetchCharacters(
   term: string,
   page = 1
 ): Promise<{ results: Character[]; pages: number }> {
-  const query = term ? `?name=${term}&page=${page}` : `?page=${page}`;
-  const url = `https://rickandmortyapi.com/api/character${query}`;
+  const url = new URL(API_URL);
+  url.searchParams.set('page', page.toString());
+  if (term) {
+    url.searchParams.set('name', term);
+  }
 
   return fetch(url).then(async (res) => {
-    if (res.status === 404) return { results: [], pages: 1 };
+    if (res.status === HttpStatus.NotFound) return { results: [], pages: 1 };
     if (!res.ok) throw new Error(`Error ${res.status}`);
     const data = await res.json();
     return {
