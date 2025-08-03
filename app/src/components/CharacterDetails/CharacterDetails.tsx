@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ReactElement, useEffect, useState } from 'react';
 import { Character } from '../../types/character';
 import { Loading } from '../Loading/Loading';
+import './CharacterDetails.styles.css';
 
 export function CharacterDetails(): ReactElement {
   const { detailsId } = useParams();
@@ -28,7 +29,7 @@ export function CharacterDetails(): ReactElement {
   };
 
   return (
-    <>
+    <div className="details">
       {loading && <Loading />}
       {!character && <p>Character not found</p>}
       {character && !loading && (
@@ -40,6 +41,6 @@ export function CharacterDetails(): ReactElement {
           <p>Location: {character?.location.name}</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

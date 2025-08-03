@@ -3,18 +3,30 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { CharacterDetails } from './components/CharacterDetails/CharacterDetails';
 import { NotFound } from './components/NotFound/NotFound';
 import { About } from './components/About/About';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { AppRoutes } from './enums/routes.enum';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
+import { Header } from './components/Header/Header';
 
 export function App(): ReactElement {
+  const theme = useSelector((state: RootState) => state.theme.theme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
-    <Routes>
-      <Route path={AppRoutes.Root} element={<Navigate to="/1" replace />} />
-      <Route path={AppRoutes.About} element={<About />} />
-      <Route path={AppRoutes.Page} element={<MainPage />}>
-        <Route path={AppRoutes.Details} element={<CharacterDetails />} />
-      </Route>
-      <Route path={AppRoutes.NotFound} element={<NotFound />} />
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        <Route path={AppRoutes.Root} element={<Navigate to="/1" replace />} />
+        <Route path={AppRoutes.About} element={<About />} />
+        <Route path={AppRoutes.Page} element={<MainPage />}>
+          <Route path={AppRoutes.Details} element={<CharacterDetails />} />
+        </Route>
+        <Route path={AppRoutes.NotFound} element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

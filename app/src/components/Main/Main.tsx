@@ -1,16 +1,15 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { Search } from '../Search/Search';
 import fetchCharacters from '../../utils/fetchCharacters';
-import { Header } from '../Header/Header';
 import { CardList } from '../CardList/CardList';
 import { Character } from '../../types/character';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
-import { ErrorButton } from '../ErrorButton/ErrorButton';
 import { Loading } from '../Loading/Loading';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { Pagination } from '../Paginaion/Pagination';
 import './Main.styles.css';
 import { NotFound } from '../NotFound/NotFound';
+import { SelectedFlyout } from '../SelectedFlyout/SelectedFlyout';
 
 export function MainPage(): ReactElement {
   const [results, setResults] = useState<Character[]>([]);
@@ -60,12 +59,12 @@ export function MainPage(): ReactElement {
 
   return (
     <div>
-      <Header />
       <ErrorBoundary
         search={<Search onSearch={handleSearch} isLoading={loading} />}
       >
-        <Search onSearch={handleSearch} isLoading={loading} />
-        <div style={{ padding: '16px' }}>
+        <div style={{ padding: '16px', backgroundColor: 'var(--bg-color)' }}>
+          <Search onSearch={handleSearch} isLoading={loading} />
+
           {error && (
             <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>
           )}
@@ -78,6 +77,7 @@ export function MainPage(): ReactElement {
             >
               <div className="left-panel">
                 <CardList items={results} />
+                <SelectedFlyout />
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
@@ -92,7 +92,6 @@ export function MainPage(): ReactElement {
             </div>
           )}
         </div>
-        <ErrorButton />
       </ErrorBoundary>
     </div>
   );
