@@ -4,6 +4,7 @@ import { RootState } from '../../store';
 import { clearAllSelected } from '../../store/selectedSlice';
 import './SelectedFlyout.styles.css';
 import { Character } from '../../types/character';
+import { API_URL } from '../../consts/urlConst';
 
 export function SelectedFlyout(): ReactElement | null {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export function SelectedFlyout(): ReactElement | null {
       item.name,
       item.status,
       item.location.name,
-      `https://rickandmortyapi.com/api/character/${item.id}`,
+      `${API_URL}/${item.id}`,
     ]);
 
     const csvContent = [headers, ...rows]

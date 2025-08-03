@@ -3,6 +3,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { Character } from '../../types/character';
 import { Loading } from '../Loading/Loading';
 import './CharacterDetails.styles.css';
+import { API_URL } from '../../consts/urlConst';
 
 export function CharacterDetails(): ReactElement {
   const { detailsId } = useParams();
@@ -13,7 +14,7 @@ export function CharacterDetails(): ReactElement {
   useEffect(() => {
     if (!detailsId) return;
 
-    fetch(`https://rickandmortyapi.com/api/character/${detailsId}`)
+    fetch(`${API_URL}/${detailsId}`)
       .then((res) => res.json())
       .then((data) => {
         setCharacter(data);
