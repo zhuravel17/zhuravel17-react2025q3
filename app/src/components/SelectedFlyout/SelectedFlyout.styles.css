@@ -1,0 +1,11 @@
+.flyout {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  color: var(--text-color);
+}
+
+.flyout-buttons {
+  display: flex;
+  gap: 8px;
+}
