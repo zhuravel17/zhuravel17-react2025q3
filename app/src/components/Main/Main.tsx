@@ -17,10 +17,11 @@ export function MainPage(): ReactElement {
   const currentPage = parseInt(page, 10);
   const isInvalidPage = !page || isNaN(currentPage);
 
-  const { data, error, isLoading, isError } = useGetCharactersQuery({
-    name,
-    page: currentPage,
-  });
+  const { data, error, isLoading, isFetching, isError, refetch } =
+    useGetCharactersQuery({
+      name,
+      page: currentPage,
+    });
   const results = data?.results ?? [];
   const totalPages = data?.info?.pages ?? 1;
   if (isInvalidPage) {
@@ -44,6 +45,9 @@ export function MainPage(): ReactElement {
       >
         <div style={{ padding: '16px', backgroundColor: 'var(--bg-color)' }}>
           <Search onSearch={handleSearch} isLoading={isLoading} />
+          <button onClick={() => refetch()} disabled={isLoading}>
+            Refresh
+          </button>
 
           {isError && (
             <div style={{ color: 'red', fontWeight: 'bold' }}>
@@ -53,6 +57,7 @@ export function MainPage(): ReactElement {
                 : 'Unknown error! Something went wrong'}
             </div>
           )}
+          {isFetching && <Loading />}
           {isLoading && <Loading />}
           {!isLoading && !isError && (
             <div

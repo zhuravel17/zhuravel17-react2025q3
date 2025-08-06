@@ -9,7 +9,13 @@ export function CharacterDetails(): ReactElement {
   const navigate = useNavigate();
 
   const id = detailsId ? parseInt(detailsId, 10) : 0;
-  const { data: character, isLoading, isError } = useGetCharacterByIdQuery(id);
+  const {
+    data: character,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useGetCharacterByIdQuery(id);
 
   const handleClose = (): void => {
     navigate(`..`, { relative: 'path' });
@@ -18,10 +24,12 @@ export function CharacterDetails(): ReactElement {
   return (
     <div className="details">
       {isLoading && <Loading />}
+      {isFetching && <Loading />}
       {isError && <p>Character not found</p>}
       {character && !isLoading && (
         <div>
           <button onClick={handleClose}>Close</button>
+          <button onClick={refetch}>Refresh</button>
           <h2>{character?.name}</h2>
           <img src={character?.image} alt={character?.name} />
           <p>Status: {character?.status}</p>
