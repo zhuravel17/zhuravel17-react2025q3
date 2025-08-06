@@ -1,48 +1,28 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { Search } from '../Search/Search';
-import fetchCharacters from '../../utils/fetchCharacters';
+import { useGetCharactersQuery } from '../../api/apiSlice';
 import { CardList } from '../CardList/CardList';
-import { Character } from '../../types/character';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { Loading } from '../Loading/Loading';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { Pagination } from '../Paginaion/Pagination';
-import './Main.styles.css';
 import { NotFound } from '../NotFound/NotFound';
 import { SelectedFlyout } from '../SelectedFlyout/SelectedFlyout';
+import './Main.styles.css';
 
 export function MainPage(): ReactElement {
-  const [results, setResults] = useState<Character[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(1);
-
   const { page = '1', detailsId } = useParams();
   const navigate = useNavigate();
   const name = localStorage.getItem('search') || '';
   const currentPage = parseInt(page, 10);
   const isInvalidPage = !page || isNaN(currentPage);
 
-  useEffect(() => {
-    if (isInvalidPage) return;
-    setLoading(true);
-    setError(null);
-
-    fetchCharacters(name, currentPage)
-      .then((data) => {
-        setResults(data.results);
-        setTotalPages(data.pages);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError('Something went wrong');
-        setResults([]);
-        setTotalPages(1);
-        setLoading(false);
-      });
-  }, [name, currentPage, isInvalidPage]);
-
+  const { data, error, isLoading, isError } = useGetCharactersQuery({
+    name,
+    page: currentPage,
+  });
+  const results = data?.results ?? [];
+  const totalPages = data?.info?.pages ?? 1;
   if (isInvalidPage) {
     return <NotFound />;
   }
@@ -60,16 +40,21 @@ export function MainPage(): ReactElement {
   return (
     <div>
       <ErrorBoundary
-        search={<Search onSearch={handleSearch} isLoading={loading} />}
+        search={<Search onSearch={handleSearch} isLoading={isLoading} />}
       >
         <div style={{ padding: '16px', backgroundColor: 'var(--bg-color)' }}>
-          <Search onSearch={handleSearch} isLoading={loading} />
+          <Search onSearch={handleSearch} isLoading={isLoading} />
 
-          {error && (
-            <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>
+          {isError && (
+            <div style={{ color: 'red', fontWeight: 'bold' }}>
+              Error:{' '}
+              {typeof error === 'object' && 'status' in error
+                ? error.status
+                : 'Unknown error! Something went wrong'}
+            </div>
           )}
-          {loading && <Loading />}
-          {!loading && !error && (
+          {isLoading && <Loading />}
+          {!isLoading && !isError && (
             <div
               className={`character-container ${
                 detailsId ? 'with-details' : ''
