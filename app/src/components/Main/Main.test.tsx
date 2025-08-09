@@ -1,12 +1,19 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MainPage } from './Main';
-import fetchCharacters from '../../utils/fetchCharacters';
 import { baseCharacter } from '../../__tests__/mockData';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
+import { useGetCharactersQuery } from '../../api/apiSlice';
 
-jest.mock('../../utils/fetchCharacters');
+jest.mock('../../api/apiSlice', () => {
+  const actual = jest.requireActual('../../api/apiSlice');
+  return {
+    __esModule: true,
+    ...actual,
+    useGetCharactersQuery: jest.fn(),
+  };
+});
 
 describe('MainPage Integration Tests', () => {
   beforeEach(() => {
@@ -16,9 +23,13 @@ describe('MainPage Integration Tests', () => {
 
   it('calls fetchCharacters on mount with saved search term from localStorage', async () => {
     localStorage.setItem('search', 'rick');
-    (fetchCharacters as jest.Mock).mockResolvedValueOnce({
-      results: [baseCharacter],
-      pages: 1,
+    (useGetCharactersQuery as jest.Mock).mockReturnValue({
+      data: { results: [baseCharacter], info: { pages: 1 } },
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      error: undefined,
+      refetch: jest.fn(),
     });
 
     render(
@@ -30,19 +41,23 @@ describe('MainPage Integration Tests', () => {
     );
 
     await waitFor(() => {
-      expect(fetchCharacters).toHaveBeenCalledWith('rick', 1);
       expect(screen.getByText(/rick sanchez/i)).toBeInTheDocument();
     });
   });
 
-  it('shows loading state while fetching', async () => {
-    (fetchCharacters as jest.Mock).mockImplementation(
-      () => new Promise(() => {})
-    );
+  it('shows loading state while fetching', () => {
+    (useGetCharactersQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isFetching: false,
+      isError: false,
+      error: undefined,
+      refetch: jest.fn(),
+    });
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/1']}>
+        <MemoryRouter>
           <MainPage />
         </MemoryRouter>
       </Provider>
@@ -52,9 +67,13 @@ describe('MainPage Integration Tests', () => {
   });
 
   it('handles API success response', async () => {
-    (fetchCharacters as jest.Mock).mockResolvedValueOnce({
-      results: [baseCharacter],
-      pages: 1,
+    (useGetCharactersQuery as jest.Mock).mockReturnValue({
+      data: { results: [baseCharacter], info: { pages: 1 } },
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      error: undefined,
+      refetch: jest.fn(),
     });
 
     render(
@@ -66,25 +85,30 @@ describe('MainPage Integration Tests', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+      expect(screen.getByText(baseCharacter.name)).toBeInTheDocument();
     });
   });
 
   it('handles API error response', async () => {
-    (fetchCharacters as jest.Mock).mockRejectedValueOnce(
-      new Error('API Error')
-    );
+    (useGetCharactersQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isFetching: false,
+      isError: true,
+      error: { status: 400 },
+      refetch: jest.fn(),
+    });
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/1']}>
+        <MemoryRouter>
           <MainPage />
         </MemoryRouter>
       </Provider>
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+      expect(screen.getByText(/Error:\s*400/i)).toBeInTheDocument();
     });
   });
 });

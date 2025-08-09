@@ -54,7 +54,7 @@ export function MainPage(): ReactElement {
               Error:{' '}
               {typeof error === 'object' && 'status' in error
                 ? error.status
-                : 'Unknown error! Something went wrong'}
+                : 'Something went wrong'}
             </div>
           )}
           {isFetching && <Loading />}
