@@ -1,29 +1,21 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ReactElement, useEffect, useState } from 'react';
-import { Character } from '../../types/character';
+import { ReactElement } from 'react';
 import { Loading } from '../Loading/Loading';
 import './CharacterDetails.styles.css';
-import { API_URL } from '../../consts/urlConst';
+import { useGetCharacterByIdQuery } from '../../api/apiSlice';
 
 export function CharacterDetails(): ReactElement {
   const { detailsId } = useParams();
   const navigate = useNavigate();
-  const [character, setCharacter] = useState<Character>();
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!detailsId) return;
-
-    fetch(`${API_URL}/${detailsId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCharacter(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [detailsId]);
+  const id = detailsId ? parseInt(detailsId, 10) : 0;
+  const {
+    data: character,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useGetCharacterByIdQuery(id);
 
   const handleClose = (): void => {
     navigate(`..`, { relative: 'path' });
@@ -31,11 +23,13 @@ export function CharacterDetails(): ReactElement {
 
   return (
     <div className="details">
-      {loading && <Loading />}
-      {!character && <p>Character not found</p>}
-      {character && !loading && (
+      {isLoading && <Loading />}
+      {isFetching && <Loading />}
+      {isError && <p>Character not found</p>}
+      {character && !isLoading && (
         <div>
           <button onClick={handleClose}>Close</button>
+          <button onClick={refetch}>Refresh</button>
           <h2>{character?.name}</h2>
           <img src={character?.image} alt={character?.name} />
           <p>Status: {character?.status}</p>

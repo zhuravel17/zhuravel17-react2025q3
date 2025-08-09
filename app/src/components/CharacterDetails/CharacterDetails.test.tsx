@@ -3,11 +3,19 @@ import { CharacterDetails } from './CharacterDetails';
 import { MemoryRouter } from 'react-router-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import { baseCharacter } from '../../__tests__/mockData';
+import { store } from '../../store';
+import { Provider } from 'react-redux';
+import { useGetCharacterByIdQuery } from '../../api/apiSlice';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(),
   useNavigate: jest.fn(),
+}));
+
+jest.mock('../../api/apiSlice', () => ({
+  ...jest.requireActual('../../api/apiSlice'),
+  useGetCharacterByIdQuery: jest.fn(),
 }));
 
 describe('CharacterDetails component', () => {
@@ -20,28 +28,40 @@ describe('CharacterDetails component', () => {
   });
 
   it('shows loading initially', async () => {
-    global.fetch = jest.fn(() => new Promise(() => {})) as jest.Mock;
+    (useGetCharacterByIdQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: false,
+      isFetching: false,
+      refetch: jest.fn(),
+    });
 
     render(
-      <MemoryRouter>
-        <CharacterDetails />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterDetails />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
   it('renders character data on successful fetch', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(baseCharacter),
-      })
-    ) as jest.Mock;
+    (useGetCharacterByIdQuery as jest.Mock).mockReturnValue({
+      data: baseCharacter,
+      isLoading: false,
+      isError: false,
+      isFetching: false,
+      refetch: jest.fn(),
+    });
 
     render(
-      <MemoryRouter>
-        <CharacterDetails />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterDetails />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -52,12 +72,20 @@ describe('CharacterDetails component', () => {
   });
 
   it('shows error message on fetch failure', async () => {
-    global.fetch = jest.fn(() => Promise.reject('API error')) as jest.Mock;
+    (useGetCharacterByIdQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      isFetching: false,
+      refetch: jest.fn(),
+    });
 
     render(
-      <MemoryRouter>
-        <CharacterDetails />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterDetails />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -66,21 +94,25 @@ describe('CharacterDetails component', () => {
   });
 
   it('navigates back when close is clicked', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(baseCharacter),
-      })
-    ) as jest.Mock;
+    (useGetCharacterByIdQuery as jest.Mock).mockReturnValue({
+      data: baseCharacter,
+      isLoading: false,
+      isError: false,
+      isFetching: false,
+      refetch: jest.fn(),
+    });
 
     render(
-      <MemoryRouter>
-        <CharacterDetails />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterDetails />
+        </MemoryRouter>
+      </Provider>
     );
 
-    await waitFor(() => screen.getByText('Close'));
+    const closeButton = await screen.findByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
 
-    fireEvent.click(screen.getByText('Close'));
     expect(mockNavigate).toHaveBeenCalledWith('..', { relative: 'path' });
   });
 });

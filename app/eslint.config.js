@@ -37,6 +37,13 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       '@typescript-eslint/explicit-function-return-type': ['error'],
       '@typescript-eslint/explicit-module-boundary-types': ['error'],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
     settings: {
       react: {
