@@ -1,16 +1,11 @@
-import type { Metadata } from 'next';
-import './global.css';
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
+import './globals.css';
 
-export const metadata: Metadata = {
-  title: 'Rick and Morty',
+type Props = {
+  children: ReactNode;
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}): ReactElement {
+export default function RootLayout({ children }: Props): ReactNode {
   return (
     <html lang="en">
       <body>{children}</body>
