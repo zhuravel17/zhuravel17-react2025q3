@@ -5,5 +5,10 @@
     "course": "as part of a project in the RS React course.",
     "back": "← Back to Home",
     "author": "zhuravel17"
+  },
+  "NotFound": {
+    "title": "404 — Page Not Found",
+    "desc": "Sorry, the page you are looking for does not exist.",
+    "back": "Go back to Home"
   }
 }
