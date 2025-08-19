@@ -1,18 +1,25 @@
+'use client';
+
 import { ReactElement } from 'react';
 import { Character } from '../../types/character';
 import './Card.styles.css';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { toggleItem } from '../../store/selectedSlice';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+
 interface Props {
   item: Character;
+  onClick?: () => void;
 }
 
 export function Card({ item }: Props): ReactElement {
-  const navigate = useNavigate();
-  const { page } = useParams();
   const dispatch = useDispatch();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const selectedItems = useSelector(
     (state: RootState) => state.selected.selected
   );
@@ -22,8 +29,11 @@ export function Card({ item }: Props): ReactElement {
   const handleCheckboxClick = (): void => {
     dispatch(toggleItem(item));
   };
+
   const handleClick = (): void => {
-    navigate(`/${page}/${item.id}`);
+    const params = new URLSearchParams(searchParams);
+    params.set('id', String(item.id));
+    router.push(`${pathname}?${params.toString()}`);
   };
   return (
     <div className="card" onClick={handleClick}>
@@ -33,7 +43,7 @@ export function Card({ item }: Props): ReactElement {
         onChange={handleCheckboxClick}
         onClick={(e) => e.stopPropagation()}
       />
-      <img src={item.image} alt={item.name} className="card__img" />
+      <Image src={item.image} alt={item.name} width={100} height={100} />
       <div className="card__info">
         <h3 className="card__name">{item.name}</h3>
         <p className="card__status">Status: {item.status}</p>

@@ -5,9 +5,10 @@ type Props = {
   children: ReactNode;
 };
 
+//TODO: export metadata
 export default function RootLayout({ children }: Props): ReactNode {
   return (
-    <html lang="en">
+    <html>
       <body>{children}</body>
     </html>
   );

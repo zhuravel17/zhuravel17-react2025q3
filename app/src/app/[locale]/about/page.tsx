@@ -1,15 +1,12 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '../../../i18n/navigation';
 import styles from './About.module.css';
-import { ReactElement } from 'react';
 
 const schoolLogo = '/school-logo.svg';
 
-export const dynamic = 'force-static';
-
-export default function AboutPage(): ReactElement {
-  const t = useTranslations('About');
+export default async function AboutPage() {
+  const t = await getTranslations('About');
 
   return (
     <div className={styles['about-container']}>

@@ -4,6 +4,9 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig = {
   //output: 'export',
   distDir: './dist',
+  images: {
+    domains: ['rickandmortyapi.com'],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();

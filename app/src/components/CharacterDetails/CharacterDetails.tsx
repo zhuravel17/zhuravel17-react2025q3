@@ -1,41 +1,44 @@
-import { useParams, useNavigate } from 'react-router-dom';
+'use client';
+
 import { ReactElement } from 'react';
-import { Loading } from '../Loading/Loading';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import './CharacterDetails.styles.css';
-import { useGetCharacterByIdQuery } from '../../api/apiSlice';
 
-export function CharacterDetails(): ReactElement {
-  const { detailsId } = useParams();
-  const navigate = useNavigate();
+interface Character {
+  id: number;
+  name: string;
+  status: string;
+  image: string;
+  location: { name: string };
+}
 
-  const id = detailsId ? parseInt(detailsId, 10) : 0;
-  const {
-    data: character,
-    isLoading,
-    isError,
-    isFetching,
-    refetch,
-  } = useGetCharacterByIdQuery(id);
+interface CharacterDetailsProps {
+  character: Character;
+}
+
+export default function CharacterDetails({
+  character,
+}: CharacterDetailsProps): ReactElement {
+  const router = useRouter();
 
   const handleClose = (): void => {
-    navigate(`..`, { relative: 'path' });
+    router.back();
   };
 
   return (
     <div className="details">
-      {isLoading && <Loading />}
-      {isFetching && <Loading />}
-      {isError && <p>Character not found</p>}
-      {character && !isLoading && (
-        <div>
-          <button onClick={handleClose}>Close</button>
-          <button onClick={refetch}>Refresh</button>
-          <h2>{character?.name}</h2>
-          <img src={character?.image} alt={character?.name} />
-          <p>Status: {character?.status}</p>
-          <p>Location: {character?.location.name}</p>
-        </div>
-      )}
+      <button onClick={handleClose}>Close</button>
+
+      <h2>{character.name}</h2>
+      <Image
+        src={character.image}
+        alt={character.name}
+        width={300}
+        height={300}
+      />
+      <p>Status: {character.status}</p>
+      <p>Location: {character.location.name}</p>
     </div>
   );
 }
