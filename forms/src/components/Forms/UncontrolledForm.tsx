@@ -3,12 +3,17 @@ import type { ReactElement } from "react";
 import { formSchema } from "../../utils/validation";
 import { ValidationError } from "yup";
 import "./UncontrolledForm.styles.css";
+import { useDispatch } from "react-redux";
+import { addUncontrolledForm } from "../../store/formSlice";
+import { imageToBase64 } from "../../utils/imageToBase64";
 
 interface Props {
   onSuccess: () => void;
 }
 
 export function UncontrolledForm({ onSuccess }: Props): ReactElement {
+  const dispatch = useDispatch();
+
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -27,7 +32,7 @@ export function UncontrolledForm({ onSuccess }: Props): ReactElement {
 
     const data = {
       name: nameRef.current?.value || "",
-      age: ageRef.current?.value ? Number(ageRef.current.value) : "",
+      age: ageRef.current?.value ? Number(ageRef.current.value) : 0,
       email: emailRef.current?.value || "",
       password: passwordRef.current?.value || "",
       confirmPassword: confirmPasswordRef.current?.value || "",
@@ -40,7 +45,10 @@ export function UncontrolledForm({ onSuccess }: Props): ReactElement {
     try {
       await formSchema.validate(data, { abortEarly: false });
       setErrors({});
-      console.log("data:", data);
+      const base64 = await imageToBase64(file);
+      const finalData = { ...data, picture: base64 };
+      console.log("data:", finalData);
+      dispatch(addUncontrolledForm(finalData));
       onSuccess();
     } catch (error) {
       if (error instanceof ValidationError) {

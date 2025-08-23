@@ -4,6 +4,9 @@ import type { ReactElement } from "react";
 import type { InferType } from "yup";
 import { formSchema } from "../../utils/validation";
 import "./HookForm.styles.css";
+import { useDispatch } from "react-redux";
+import { addHookForm, type StoredFormData } from "../../store/formSlice";
+import { imageToBase64 } from "../../utils/imageToBase64";
 
 type FormData = InferType<typeof formSchema>;
 
@@ -12,6 +15,8 @@ interface Props {
 }
 
 export function HookForm({ onSuccess }: Props): ReactElement {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -22,8 +27,14 @@ export function HookForm({ onSuccess }: Props): ReactElement {
     mode: "onChange",
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("data:", data);
+  const onSubmit = async (data: FormData) => {
+    const file = data.picture;
+    if (!file) return;
+
+    const base64 = await imageToBase64(file);
+
+    const finalData: StoredFormData = { ...data, picture: base64 };
+    dispatch(addHookForm(finalData));
     reset();
     onSuccess();
   };
