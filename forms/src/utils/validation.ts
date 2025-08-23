@@ -30,13 +30,18 @@ export const formSchema = yup.object().shape({
     .required("Please confirm password")
     .oneOf([yup.ref("password")], "Passwords must match"),
   gender: yup.string().required("Gender is required"),
-  terms: yup.boolean().oneOf([true], "You must accept Terms & Conditions"),
+  terms: yup
+    .boolean()
+    .required("You must accept Terms & Conditions")
+    .oneOf([true], "You must accept Terms & Conditions"),
   picture: yup
-    .mixed()
+    .mixed<File>()
+    .nullable()
     .required("Picture is required")
     .test("fileFormat", "Only PNG/JPEG allowed", (value) => {
-      if (!(value instanceof File)) return false;
+      if (!value) return false;
       return ["image/jpeg", "image/png"].includes(value.type);
     }),
+
   country: yup.string().required("Country is required"),
 });
