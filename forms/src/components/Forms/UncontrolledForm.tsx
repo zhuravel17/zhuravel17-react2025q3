@@ -3,9 +3,10 @@ import type { ReactElement } from "react";
 import { formSchema } from "../../utils/validation";
 import { ValidationError } from "yup";
 import "./UncontrolledForm.styles.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUncontrolledForm } from "../../store/formSlice";
 import { imageToBase64 } from "../../utils/imageToBase64";
+import type { RootState } from "../../store";
 
 interface Props {
   onSuccess: () => void;
@@ -13,6 +14,7 @@ interface Props {
 
 export function UncontrolledForm({ onSuccess }: Props): ReactElement {
   const dispatch = useDispatch();
+  const countries = useSelector((state: RootState) => state.country.countries);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
@@ -126,7 +128,17 @@ export function UncontrolledForm({ onSuccess }: Props): ReactElement {
 
       <label>
         Country:
-        <input type="text" ref={countryRef} placeholder="Start typing..." />
+        <input
+          type="text"
+          ref={countryRef}
+          placeholder="Start typing..."
+          list="countries"
+        />
+        <datalist id="countries">
+          {countries.map((c) => (
+            <option key={c} value={c} />
+          ))}
+        </datalist>
       </label>
       {errors.country && <p className="error">{errors.country}</p>}
 

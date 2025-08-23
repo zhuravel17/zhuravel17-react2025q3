@@ -1,12 +1,13 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactElement } from "react";
 import type { InferType } from "yup";
 import { formSchema } from "../../utils/validation";
 import "./HookForm.styles.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addHookForm, type StoredFormData } from "../../store/formSlice";
 import { imageToBase64 } from "../../utils/imageToBase64";
+import type { RootState } from "../../store";
 
 type FormData = InferType<typeof formSchema>;
 
@@ -16,10 +17,12 @@ interface Props {
 
 export function HookForm({ onSuccess }: Props): ReactElement {
   const dispatch = useDispatch();
+  const countries = useSelector((state: RootState) => state.country.countries);
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
     reset,
   } = useForm<FormData>({
@@ -95,10 +98,19 @@ export function HookForm({ onSuccess }: Props): ReactElement {
 
       <label>
         Picture:
-        <input
-          type="file"
-          accept="image/png, image/jpeg"
-          {...register("picture")}
+        <Controller
+          name="picture"
+          control={control}
+          render={({ field }) => (
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                field.onChange(file);
+              }}
+            />
+          )}
         />
       </label>
       {errors.picture && <p className="error">{errors.picture.message}</p>}
@@ -108,8 +120,14 @@ export function HookForm({ onSuccess }: Props): ReactElement {
         <input
           type="text"
           placeholder="Start typing..."
+          list="countries"
           {...register("country")}
         />
+        <datalist id="countries">
+          {countries.map((c) => (
+            <option key={c} value={c} />
+          ))}
+        </datalist>
       </label>
       {errors.country && <p className="error">{errors.country.message}</p>}
 

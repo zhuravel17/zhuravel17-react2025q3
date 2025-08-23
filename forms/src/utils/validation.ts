@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { countries } from "../consts/countries";
 
 export const passwordRegex = {
   number: /\d/,
@@ -42,6 +43,8 @@ export const formSchema = yup.object().shape({
       if (!value) return false;
       return ["image/jpeg", "image/png"].includes(value.type);
     }),
-
-  country: yup.string().required("Country is required"),
+  country: yup
+    .string()
+    .required("Country is required")
+    .oneOf(countries, "Please select a valid country"),
 });
