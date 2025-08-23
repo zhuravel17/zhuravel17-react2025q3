@@ -12,7 +12,7 @@ export interface StoredFormData {
   country: string;
 }
 
-interface FormState {
+export interface FormState {
   uncontrolledForms: StoredFormData[];
   hookForms: StoredFormData[];
 }
