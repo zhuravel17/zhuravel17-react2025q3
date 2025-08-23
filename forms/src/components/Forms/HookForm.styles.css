@@ -17,7 +17,6 @@
   color: white;
   cursor: pointer;
 }
-
-.form button:hover {
-  background-color: #1259a8;
+.form button:disabled {
+  background-color: #33414f;
 }
