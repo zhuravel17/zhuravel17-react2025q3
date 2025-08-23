@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["jest", "@testing-library/jest-dom"]
+  },
+  "include": ["src", "**/*.test.ts", "**/*.test.tsx", "__mocks__"]
+}

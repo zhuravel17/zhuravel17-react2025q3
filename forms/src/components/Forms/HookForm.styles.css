@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 80vh;
+}
+
+.form h2 {
+  margin-bottom: 12px;
+}
+
+.form button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+}
+.form button:disabled {
+  background-color: #33414f;
+}
